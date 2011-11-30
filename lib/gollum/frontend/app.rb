@@ -53,6 +53,17 @@ module Precious
       end
     end
 
+    post '/delete/*' do
+      wiki = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
+      page = wiki.page(params[:splat].first)
+      committer = Gollum::Committer.new(wiki, commit_message)
+      commit    = {:committer => committer}
+
+      wiki.delete_page(page, commit)
+      committer.commit
+      redirect "/pages"
+    end
+
     post '/edit/*' do
       wiki = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
       page = wiki.page(params[:splat].first)
